@@ -1,0 +1,26 @@
+{
+  "name": "nadar",
+  "version": "1.0.0",
+  "description": "test project",
+  "main": "nadar.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ASudri/nadar.git"
+  },
+  "keywords": [
+    "test"
+  ],
+  "author": "Andy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ASudri/nadar/issues"
+  },
+  "homepage": "https://github.com/ASudri/nadar#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "express-handlebars": "^3.0.0"
+  }
+}
