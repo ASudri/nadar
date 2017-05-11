@@ -2,7 +2,9 @@ var express = require('express');
 var app = express();
 // Установка механизма представления handlebars
 var handlebars = require('express-handlebars')
-.create({ defaultLayout:'main' });
+  .create({
+    defaultLayout: 'main'
+  });
 
 var fortune = require('./lib/fortune.js');
 
@@ -11,14 +13,23 @@ app.set('view engine', 'handlebars');
 
 app.set('port', process.env.PORT || 3000);
 
+
+app.use(function(req, res, next) {
+  res.locals.showTests = req.query.test === '1';
+  next();
+});
+
 app.use(express.static(__dirname + '/public'));
+
 
 app.get('/', function(req, res) {
   res.render('home');
 });
 
 app.get('/about', function(req, res) {
-  res.render('about', {fortune: fortune.getFortune()});
+  res.render('about', {
+    fortune: fortune.getFortune()
+  });
 
 });
 // Обобщенный обработчик 404
