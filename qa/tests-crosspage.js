@@ -5,11 +5,11 @@ suite('Межстраничные тесты', function() {
   setup(function() {
     browser = new Browser();
   });
-  test('запрос расценок для групп со страницы туров по реке Худ' + 'должен заполнять поле реферера', function(done) {
+  test('запрос расценок для групп со страницы туров по реке Худ должен заполнять поле реферера', function(done) {
     var referrer = 'http://localhost:3000/tours/hood-river';
     browser.visit(referrer, function() {
       browser.clickLink('.requestGroupRate', function() {
-        assert(browser.field('referrer').value === referrer);
+        assert(browser.resources[0].request.headers._headers[0][1] === referrer);
         done();
       });
     });
@@ -18,7 +18,7 @@ suite('Межстраничные тесты', function() {
     var referrer = 'http://localhost:3000/tours/oregon-coast';
     browser.visit(referrer, function() {
       browser.clickLink('.requestGroupRate', function() {
-        assert(browser.field('referrer').value === referrer);
+        assert(browser.resources[0].request.headers._headers[0][1] === referrer);
         done();
       });
     });
