@@ -1,10 +1,13 @@
 var express = require('express');
 var app = express();
+var express_sections = require('express-handlebars-sections');
 // Установка механизма представления handlebars
 var handlebars = require('express-handlebars')
   .create({
     defaultLayout: 'main'
   });
+
+express_sections(handlebars);
 
 var fortune = require('./lib/fortune.js');
 
@@ -33,6 +36,14 @@ app.get('/about', function(req, res) {
   });
 
 });
+
+app.get('/tours/hood-river', function(req, res) {
+  res.render('tours/hood-river');
+});
+app.get('/tours/request-group-rate', function(req, res) {
+  res.render('tours/request-group-rate');
+});
+
 // Обобщенный обработчик 404
 app.use(function(req, res) {
   res.status(404);
