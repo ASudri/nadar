@@ -9,7 +9,7 @@ suite('Межстраничные тесты', function() {
     var referrer = 'http://localhost:3000/tours/hood-river';
     browser.visit(referrer, function() {
       browser.clickLink('.requestGroupRate', function() {
-        assert(browser.resources[0].request.headers._headers[0][1] === referrer);
+        assert(browser.referrer === referrer);
         done();
       });
     });
@@ -18,7 +18,7 @@ suite('Межстраничные тесты', function() {
     var referrer = 'http://localhost:3000/tours/oregon-coast';
     browser.visit(referrer, function() {
       browser.clickLink('.requestGroupRate', function() {
-        assert(browser.resources[0].request.headers._headers[0][1] === referrer);
+        assert(browser.referrer === referrer);
         done();
       });
     });
@@ -26,7 +26,7 @@ suite('Межстраничные тесты', function() {
   test('посещение страницы "Запрос цены для групп" напрямую ' + 'должен приводить к пустому полю реферера', function(done) {
     browser.visit('http://localhost:3000/tours/request-group-rate',
       function() {
-        assert(browser.field('referrer').value === '');
+        assert(browser.referrer === null);
         done();
       });
   });
