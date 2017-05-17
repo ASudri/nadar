@@ -15,7 +15,7 @@ suite('Межстраничные тесты', function() {
     });
   });
   test('запрос расценок для групп со страницы туров ' + 'пансионата "Орегон Коуст" должен ' + 'заполнять поле реферера', function(done) {
-    var referrer = 'http://localhost:3000/tours/oregon-coast';
+    var referrer = 'http://localhost:3000/tours/oregon-coust';
     browser.visit(referrer, function() {
       browser.clickLink('.requestGroupRate', function() {
         assert(browser.referrer === referrer);
