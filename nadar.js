@@ -46,6 +46,13 @@ app.get('/tours/oregon-coust', function(req, res) {
 app.get('/tours/request-group-rate', function(req, res) {
   res.render('tours/request-group-rate');
 });
+app.get('/headers', function(req,res){
+res.set('Content-Type','text/plain');
+var s = '';
+for(var name in req.headers)
+s += name + ': ' + req.headers[name] + '\n';
+res.send(s + '<br>'+ s2 );
+});
 
 // Обобщенный обработчик 404
 app.use(function(req, res) {

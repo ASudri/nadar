@@ -12,6 +12,7 @@ grunt.initConfig({
   mochaTest: {
       test: {
         options: {
+          timeout: '5000',
           reporter: 'spec',
           ui: 'tdd',
           //captureFile: 'results.txt', // Optionally capture the reporter output to a file
@@ -35,5 +36,5 @@ linkchecker:
 },
 });
 
-grunt.registerTask('default', ['cafemocha','jshint','exec']);
+grunt.registerTask('default', ['mochaTest','exec']);
 };
