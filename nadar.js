@@ -4,7 +4,14 @@ var express_sections = require('express-handlebars-sections');
 // Установка механизма представления handlebars
 var handlebars = require('express-handlebars')
   .create({
-    defaultLayout: 'main'
+    defaultLayout: 'main',
+    helpers: {
+      section: function(name, options) {
+        if (!this._sections) this._sections = {};
+        this._sections[name] = options.fn(this);
+        return null;
+      }
+    }
   });
 
 express_sections(handlebars);
@@ -24,6 +31,11 @@ app.use(function(req, res, next) {
 
 app.use(express.static(__dirname + '/public'));
 
+app.use(function(req, res, next) {
+  if (!res.locals.partials) res.locals.partials = {};
+  res.locals.partials.weatherContext = getWeatherData();
+  next();
+});
 
 app.get('/', function(req, res) {
   res.render('home');
@@ -46,12 +58,28 @@ app.get('/tours/oregon-coust', function(req, res) {
 app.get('/tours/request-group-rate', function(req, res) {
   res.render('tours/request-group-rate');
 });
-app.get('/headers', function(req,res){
-res.set('Content-Type','text/plain');
-var s = '';
-for(var name in req.headers)
-s += name + ': ' + req.headers[name] + '\n';
-res.send(s + '<br>'+ s2 );
+app.get('/headers', function(req, res) {
+  res.set('Content-Type', 'text/plain');
+  var s = '';
+  for (var name in req.headers)
+    s += name + ': ' + req.headers[name] + '\n';
+  res.send(s + '<br>' + s2);
+});
+
+app.get('/jq', function(req, res){
+  res.render('jquery-test');
+});
+
+app.get('/nursery-rhyme', function(req, res){
+res.render('nursery-rhyme');
+});
+app.get('/data/nursery-rhyme', function(req, res){
+res.json({
+animal: 'бельчонок',
+bodyPart: 'хвост',
+adjective: 'пушистый',
+noun: 'черт',
+});
 });
 
 // Обобщенный обработчик 404
@@ -69,3 +97,30 @@ app.listen(app.get('port'), function() {
   console.log('Express запущен на http://localhost:' +
     app.get('port') + '; нажмите Ctrl+C для завершения.');
 });
+
+function getWeatherData() {
+  return {
+    locations: [{
+        name: 'Портленд',
+        forecastUrl: 'http://www.wunderground.com/US/OR/Portland.html',
+        iconUrl: 'http://icons-ak.wxug.com/i/c/k/cloudy.gif',
+        weather: 'Сплошная облачность ',
+        temp: '54.1 F (12.3 C)',
+      },
+      {
+        name: 'Бенд',
+        forecastUrl: 'http://www.wunderground.com/US/OR/Bend.html',
+        iconUrl: 'http://icons-ak.wxug.com/i/c/k/partlycloudy.gif',
+        weather: 'Малооблачно',
+        temp: '55.0 F (12.8 C)',
+      },
+      {
+        name: 'Манзанита',
+        forecastUrl: 'http://www.wunderground.com/US/OR/Manzanita.html',
+        iconUrl: 'http://icons-ak.wxug.com/i/c/k/rain.gif',
+        weather: 'Небольшой дождь',
+        temp: '55.0 F (12.8 C)',
+      },
+    ],
+  };
+}
