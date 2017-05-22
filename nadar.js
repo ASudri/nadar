@@ -17,6 +17,7 @@ var handlebars = require('express-handlebars')
 express_sections(handlebars);
 
 var fortune = require('./lib/fortune.js');
+var formidable = require('formidable');
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -30,6 +31,9 @@ app.use(function(req, res, next) {
 });
 
 app.use(express.static(__dirname + '/public'));
+app.use(require('body-parser').urlencoded({
+  extended: true
+}));
 
 app.use(function(req, res, next) {
   if (!res.locals.partials) res.locals.partials = {};
@@ -66,22 +70,63 @@ app.get('/headers', function(req, res) {
   res.send(s + '<br>' + s2);
 });
 
-app.get('/jq', function(req, res){
+app.get('/jq', function(req, res) {
   res.render('jquery-test');
 });
 
-app.get('/nursery-rhyme', function(req, res){
-res.render('nursery-rhyme');
+app.get('/nursery-rhyme', function(req, res) {
+  res.render('nursery-rhyme');
 });
-app.get('/data/nursery-rhyme', function(req, res){
-res.json({
-animal: 'бельчонок',
-bodyPart: 'хвост',
-adjective: 'пушистый',
-noun: 'черт',
+app.get('/data/nursery-rhyme', function(req, res) {
+  res.json({
+    animal: 'бельчонок',
+    bodyPart: 'хвост',
+    adjective: 'пушистый',
+    noun: 'черт',
+  });
 });
+app.get('/newsletter', function(req, res) {
+  // мы изучим CSRF позже... сейчас мы лишь
+  // заполняем фиктивное значение
+  res.render('newsletter', {
+    csrf: 'CSRF token goes here'
+  });
 });
 
+app.get('/contest/vacation-photo', function(req, res) {
+  var now = new Date();
+  console.log(now.getFullYear());
+  console.log(now.getMonth());
+  res.render('contest/vacation-photo', {
+    year: now.getFullYear(),
+    month: now.getMonth()
+  });
+});
+
+app.post('/contest/vacation-photo/:year/:month', function(req, res) {
+  var form = new formidable.IncomingForm();
+  form.parse(req, function(err, fields, files) {
+    if (err) return res.redirect(303, '/error');
+    console.log(req.url);
+    console.log('received fields:');
+    console.log(fields);
+    console.log('received files:');
+    console.log(files);
+    res.redirect(303, '/thank-you');
+  });
+});
+
+app.post('/process', function(req, res) {
+  if (req.xhr || req.accepts('json,html') === 'json') {
+    // если здесь есть ошибка, то мы должны отправить { error: 'описание ошибки' }
+    res.send({
+      success: true
+    });
+  } else {
+    // если бы была ошибка, нам нужно было бы перенаправлять на страницу ошибки
+    res.redirect(303, '/thank-you');
+  }
+});
 // Обобщенный обработчик 404
 app.use(function(req, res) {
   res.status(404);
